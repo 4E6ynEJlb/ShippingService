@@ -5,11 +5,11 @@ namespace Domain.Stores
 {
     public interface IOrderStore
     {
-        public Task<Order> GetOrderAsync(Guid orderId);
-        public Task<OrdersPageOutput> GetOrdersAsync(OrdersFilters filters);
-        public Task<int> OrdersInDistrictCountAsync(string district);
-        public Task CreateAsync(Order order);
-        public Task UpdateAsync(Order order);
-        public Task DeleteAsync(Guid orderId);
+        public Task<Order?> GetOrderAsync(Guid orderId, CancellationToken cancellationToken);
+        public Task<OrdersPageOutput> GetOrdersAsync(OrdersFilters filters, CancellationToken cancellationToken);
+        public Task<int> OrdersInDistrictCountAsync(string district, CancellationToken cancellationToken);
+        public Task CreateAsync(Order order, CancellationToken cancellationToken);
+        public Task UpdateAsync(Order order, CancellationToken cancellationToken);
+        public Task DeleteAsync(Guid orderId, CancellationToken cancellationToken);
     }
 }

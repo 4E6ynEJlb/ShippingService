@@ -11,6 +11,6 @@ namespace Domain.Models.Entities
         [BsonElement]
         public required string District { get; set; }
         [BsonElement]
-        public DateTime DeliveryTime { get; set; }
+        public DateTime DeliveryDateTime { get; set; }
     }
 }
