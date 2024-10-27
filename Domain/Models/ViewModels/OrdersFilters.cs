@@ -8,5 +8,9 @@
         public bool IsAscending { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
+        public override string ToString()
+        {
+            return $"District: {District??""}, MinDateTime: {MinimalDateTime}, MaxDateTime: {MaximalDateTime}, Asc: {IsAscending}, Pg: {Page}, PgSize: {PageSize}";
+        }
     }
 }

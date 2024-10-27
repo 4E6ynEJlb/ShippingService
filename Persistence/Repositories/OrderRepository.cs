@@ -13,9 +13,9 @@ namespace Persistence.Repositories
     {
         private readonly ShippingContext _context = context;
 
-        public async Task<Order?> GetOrderAsync(Guid orderId, CancellationToken cancellationToken)
+        public async Task<Order> GetOrderAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            return await _context.OrdersQueryable.FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
+            return await _context.OrdersQueryable.FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken) ?? throw new RecordNotFoundException();
         }
 
         public async Task<OrdersPageOutput> GetOrdersAsync(OrdersFilters filters, CancellationToken cancellationToken)
@@ -43,10 +43,10 @@ namespace Persistence.Repositories
             if (filters.Page > pagesCount || filters.Page < 1)
                 throw new InvalidPageNumberException();
             query = query.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize);
-            return new() 
-            { 
-                Orders = await query.ToListAsync(cancellationToken), 
-                PagesCount = pagesCount 
+            return new()
+            {
+                Orders = await query.ToListAsync(cancellationToken),
+                PagesCount = pagesCount
             };
         }
 

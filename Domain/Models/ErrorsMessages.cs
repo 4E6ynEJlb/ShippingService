@@ -7,5 +7,6 @@
         public const string UPDATE_ERROR = "Error while updating the record";
         public const string DELETION_ERROR = "Error while deleting the record";
         public const string EMPTY_ARGUMENT = "Request argument is empty";
+        public const string ARGUMENT_VALUE = "Request argument value is incorrect";
     }
 }
