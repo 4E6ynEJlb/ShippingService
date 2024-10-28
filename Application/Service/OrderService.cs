@@ -14,10 +14,10 @@ namespace Application.Service
 
         public async Task<Order> GetOrderAsync(Guid orderId, CancellationToken cancellationToken)
         {
-            _logger.LogDebug($"{LoggerMessages.GET_ORDER_MESSAGE}{orderId}");
+            _logger.LogInformation($"{LoggerMessages.GET_ORDER_MESSAGE}{orderId}");
             orderId.Validate();
             Order result = await _orderStore.GetOrderAsync(orderId, cancellationToken);
-            _logger.LogDebug(LoggerMessages.SUCCESS);
+            _logger.LogInformation(LoggerMessages.SUCCESS);
             return result;
         }
 

@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: ShippingService/Dockerfile
+    depends_on:
+      - grafana
+      - loki
+      - mongo
+    restart: always
+  mongo:
+     image: mongo:4.4.6
+     ports:
+       - "27017:27017"
+     restart: always
+  loki:
+    image: grafana/loki:master
+    ports:
+       - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: always
+  grafana:
+    image: grafana/grafana:master
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./provisioning/plugins:/etc/grafana/provisioning/plugins
+      - ./grafanaConfiguration:/etc/grafana/provisioning/
+      - ./provisioning/notifiers:/etc/grafana/provisioning/notifiers
+    depends_on:
+      - loki
+    restart: always
+volumes:
+  grafana: ~
+  loki: ~

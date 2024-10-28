@@ -1,5 +1,6 @@
 ﻿using Domain.Models.Entities;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure
@@ -12,7 +13,6 @@ namespace Infrastructure
         {
             MongoClient client = new(options.Value.Endpoint);
             IMongoDatabase database = client.GetDatabase(options.Value.Database);
-            database.CreateCollection(options.Value.OrdersCollection);
             Orders = database.GetCollection<Order>(options.Value.OrdersCollection);
             Orders.Indexes.CreateOne(new CreateIndexModel<Order>(Builders<Order>.IndexKeys.Ascending(o=>o.DeliveryDateTime)));
             OrdersQueryable = Orders.AsQueryable();

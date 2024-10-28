@@ -9,5 +9,7 @@
         public const string CREATE_ORDER = "Trying to create order: ";
         public const string UPDATE_ORDER = "Trying to update order: ";
         public const string DELETE_ORDER = "Trying to delete order with id: ";
+        public const string SERVICE_EXCEPTION = "Service exception was thrown with message: ";
+        public const string UNKNOWN_EXCEPTION = "Unknown exception was thrown with message: ";
     }
 }
