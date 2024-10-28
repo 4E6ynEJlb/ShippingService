@@ -15,6 +15,11 @@ namespace Application.Models
             if (arg == Guid.Empty)
                 throw new EmptyArgumentException();
         }
+        internal static void Validate(this DateTime arg)
+        {
+            if (arg == DateTime.MinValue)
+                throw new EmptyArgumentException();
+        }
         internal static void Validate(this OrderInputModel arg)
         {
             if (arg == null)
@@ -22,8 +27,8 @@ namespace Application.Models
             arg.District.Validate();
             if (arg.Weight <= 0)
                 throw new ArgumentValueException();
-            if (arg.DeliveryDateTime == DateTime.MinValue)
-                throw new EmptyArgumentException();
+            arg.DeliveryDateTime.Validate();
+
         }
         internal static void Validate(this OrdersFilters arg)
         {
@@ -31,8 +36,8 @@ namespace Application.Models
                 throw new EmptyArgumentException();
             if (arg.District != null && !arg.District.Any(char.IsLetter))
                 throw new EmptyArgumentException();
-            if (arg.MinimalDateTime == DateTime.MinValue || arg.MaximalDateTime == DateTime.MinValue)
-                throw new EmptyArgumentException();
+            arg.MinimalDateTime?.Validate();
+            arg.MaximalDateTime?.Validate();
             if (arg.PageSize < 1)
                 throw new ArgumentValueException();
         }

@@ -8,7 +8,7 @@ using Serilog.Sinks.Grafana.Loki;
 using Serilog.Events;
 using Serilog.Sinks.GrafanaLoki;
 using API.Middleware;
-using MongoDB.Bson;
+using Application.Services;
 
 namespace ShippingService
 {
@@ -20,13 +20,16 @@ namespace ShippingService
 
             var credentials = new GrafanaLokiCredentials()
             {
-                User = builder.Configuration.GetSection("LokiOptions").GetValue<string>("User") ?? throw new ArgumentNullException("Loki User"),
-                Password = builder.Configuration.GetSection("LokiOptions").GetValue<string>("Password") ?? throw new ArgumentNullException("Loki Password")
+                User = builder.Configuration.GetSection("LokiOptions").GetValue<string>("User")
+                ?? throw new ArgumentNullException("Loki User"),
+                Password = builder.Configuration.GetSection("LokiOptions").GetValue<string>("Password") 
+                ?? throw new ArgumentNullException("Loki Password")
             };
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .WriteTo.GrafanaLoki(
-                    builder.Configuration.GetSection("LokiOptions").GetValue<string>("URI") ?? throw new ArgumentNullException("Loki URI"),
+                    builder.Configuration.GetSection("LokiOptions").GetValue<string>("URI") 
+                    ?? throw new ArgumentNullException("Loki URI"),
                     credentials,
                     new Dictionary<string, string> { { "app", "Serilog.Sinks.GrafanaLoki.Sample" } },
                     LogEventLevel.Information
@@ -35,12 +38,19 @@ namespace ShippingService
             builder.Logging.AddSerilog();
 
             builder.Services.Configure<MongoOptions>(builder.Configuration.GetSection(MongoOptions.OptionsName));
+
             builder.Services.AddSingleton<ShippingContext>();
             builder.Services.AddScoped<IOrderStore, OrderRepository>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IResultStore, ResultRepository>();
+            builder.Services.AddScoped<IResultService, ResultService>();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "APIDocumentation.xml"));
+            });
 
             var app = builder.Build();
 
